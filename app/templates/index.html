@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>P95.AI Lead Pipeline</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body data-anthropic="{{ 'true' if has_anthropic_key else 'false' }}">
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">ThinkRoot Hackathon Demo</p>
+          <h1>P95.AI GTM Console</h1>
+          <p class="hero-text">
+            Upload Clay exports, score enterprise AI infra leads, and generate
+            outreach briefs your team can send immediately.
+          </p>
+          <div class="hero-actions">
+            <a href="#score-section" class="button button-primary">Score Leads</a>
+            <a href="#outreach-section" class="button button-secondary">Generate Outreach</a>
+          </div>
+        </div>
+        <div class="hero-card">
+          <div class="status-chip {{ 'ready' if has_anthropic_key else 'warning' }}">
+            {{ 'Anthropic configured' if has_anthropic_key else 'Anthropic key missing' }}
+          </div>
+          <dl class="hero-metrics">
+            <div>
+              <dt>ICP Model</dt>
+              <dd>10 weighted dimensions</dd>
+            </div>
+            <div>
+              <dt>Lead Tiers</dt>
+              <dd>Hot / Warm / Cold</dd>
+            </div>
+            <div>
+              <dt>Output</dt>
+              <dd>CSV + sendable outreach briefs</dd>
+            </div>
+          </dl>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="panel" id="mock-section">
+          <div class="panel-header">
+            <p class="panel-kicker">Step 1</p>
+            <h2>Generate Mock Leads</h2>
+            <p>Create a realistic test CSV if you want a demo dataset first.</p>
+          </div>
+          <form id="mock-form" class="tool-form">
+            <label>
+              Lead count
+              <input type="number" name="count" min="1" max="5000" value="220" />
+            </label>
+            <button type="submit" class="button button-primary">Generate CSV</button>
+          </form>
+          <div id="mock-result" class="result-card hidden"></div>
+        </section>
+
+        <section class="panel" id="score-section">
+          <div class="panel-header">
+            <p class="panel-kicker">Step 2</p>
+            <h2>Score Clay Leads</h2>
+            <p>
+              Upload a Clay-style CSV. The app returns the same dataset with
+              <code>raw_score</code>, <code>tier</code>, and
+              <code>score_explanation</code>.
+            </p>
+          </div>
+          <form id="score-form" class="tool-form tool-form-wide">
+            <label class="file-input">
+              <span>Clay export CSV</span>
+              <input type="file" name="file" accept=".csv" required />
+            </label>
+            <button type="submit" class="button button-primary">Score Leads</button>
+          </form>
+          <div id="score-result" class="result-card hidden"></div>
+        </section>
+
+        <section class="panel" id="outreach-section">
+          <div class="panel-header">
+            <p class="panel-kicker">Step 3</p>
+            <h2>Generate Outreach</h2>
+            <p>
+              Upload a scored CSV to create pain-led and ROI-led emails, LinkedIn
+              DMs, and a ready-to-copy outreach brief for each target company.
+            </p>
+          </div>
+          <form id="outreach-form" class="tool-form tool-form-wide">
+            <label class="file-input">
+              <span>Scored leads CSV</span>
+              <input type="file" name="file" accept=".csv" required />
+            </label>
+            <div class="inline-fields">
+              <label class="checkbox-row">
+                <input type="checkbox" name="generate_all" checked />
+                <span>Generate for every lead in the file</span>
+              </label>
+              <label>
+                Top N
+                <input type="number" name="top_n" min="1" value="50" />
+              </label>
+              <label>
+                Delay (seconds)
+                <input type="number" name="delay_seconds" min="0" step="0.5" value="1.0" />
+              </label>
+            </div>
+            <button type="submit" class="button button-primary">Generate Outreach</button>
+          </form>
+          <div id="outreach-result" class="result-card hidden"></div>
+        </section>
+
+        <section class="panel panel-api">
+          <div class="panel-header">
+            <p class="panel-kicker">Deployment</p>
+            <h2>ThinkRoot-Ready API Surface</h2>
+          </div>
+          <div class="api-grid">
+            <article>
+              <h3><code>GET /api/health</code></h3>
+              <p>Healthcheck for deployment validation.</p>
+            </article>
+            <article>
+              <h3><code>POST /api/mock-leads</code></h3>
+              <p>Generate demo data and download it instantly.</p>
+            </article>
+            <article>
+              <h3><code>POST /api/score</code></h3>
+              <p>Score a Clay export and return a scored CSV payload.</p>
+            </article>
+            <article>
+              <h3><code>POST /api/outreach</code></h3>
+              <p>Generate outreach briefs for every qualified lead.</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="download-template">
+      <a class="button button-secondary" target="_blank" rel="noopener">Download CSV</a>
+    </template>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
